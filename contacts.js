@@ -1,9 +1,14 @@
 const fs = require('fs/promises')
 const path = require('path')
-
-// const filePath = path.join(__dirname, "products.json");
+const contacts = require('./db/contacts.json')
 
 const contactsPath = path.join(__dirname, './db/contacts.json')
+
+const { v4 } = require('uuid')
+
+const updateContacts = async (newContacts) => {
+  await fs.writeFile(contactsPath, JSON.stringify(newContacts))
+}
 
 // TODO: задокументировать каждую функцию
 async function listContacts() {
@@ -12,21 +17,35 @@ async function listContacts() {
 
 async function getContactById(contactId) {
   const contacts = await listContacts()
-  const contact = contact.find((item) => item.id === contactId)
+  const contact = contacts.find((item) => item.id === contactId)
   if (!contact) {
     return null
   }
   return contact
 }
 
-// function removeContact(contactId) {
-//   // ...твой код
-// }
+async function removeContact(contactId) {
+  const contacts = await listContacts()
+  const idx = contacts.findIndex((item) => item.id === contactId)
+  if (idx === -1) {
+    return null
+  }
+  contacts.splice(idx, 1)
+  await updateContacts(contacts)
+  return 'Success remove'
+}
 
-// function addContact(name, email, phone) {
-//   // ...твой код
-// }
+async function addContact(data) {
+  const contacts = await listContacts()
+  const newContact = { ...data, id: { v4 } }
+  contacts.push(newContact)
+  await updateContacts(contacts)
+  return newContact
+}
 
 module.exports = {
   listContacts,
+  getContactById,
+  removeContact,
+  addContact,
 }

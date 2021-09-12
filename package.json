@@ -20,5 +20,8 @@
   "homepage": "https://github.com/irinafilipenko/CLI-application#readme",
   "devDependencies": {
     "nodemon": "^2.0.12"
+  },
+  "dependencies": {
+    "uuidv4": "^6.2.12"
   }
 }

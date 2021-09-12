@@ -1,40 +1,39 @@
-const contactsOperations = require('./contacts')
+const contacts = require('./contacts')
 
-const workWithContacts = async (type = 'listContacts', id, data) => {
-  try {
-    switch (type) {
-      case 'listContacts':
-        return await contactsOperations.listContacts()
-      case 'getContactById':
-        return await contactsOperations.getContactById(id)
-      case 'removeContact':
-        return await contactsOperations.removeContact(id)
-      case 'addContact':
-        return await contactsOperations.addContact(id, data)
-    }
-  } catch (error) {
-    throw error
+const { Command } = require('commander')
+const program = new Command()
+program
+  .option('-a, --action <type>', 'choose action')
+  .option('-i, --id <type>', 'user id')
+  .option('-n, --name <type>', 'user name')
+  .option('-e, --email <type>', 'user email')
+  .option('-p, --phone <type>', 'user phone')
+
+program.parse(process.argv)
+
+const argv = program.opts()
+
+function invokeAction({ action, id, name, email, phone }) {
+  switch (action) {
+    case 'list':
+      contacts.listContacts()
+      break
+
+    case 'get':
+      contacts.getContactById(id)
+      break
+
+    case 'add':
+      contacts.addContact(name, email, phone)
+      break
+
+    case 'remove':
+      contacts.removeContact(id)
+      break
+
+    default:
+      console.warn('\x1B[31m Unknown action type!')
   }
 }
 
-// workWithContacts('listContacts')
-//   .then((data) => console.log(data))
-//   .catch((error) => console.log(error))
-
-// workWithContacts('getContactById', 9)
-//   .then((data) => console.log(data))
-//   .catch((error) => console.log(error))
-
-// workWithContacts('removeContact', 8)
-//   .then((data) => console.log(data))
-//   .catch((error) => console.log(error))
-
-const newData = {
-  name: 'Rina Filipenko',
-  email: 'abyoo15532@gmail.com',
-  phone: '(068)5738598',
-}
-
-workWithContacts('addContact', '', newData)
-  .then((data) => console.log(data))
-  .catch((error) => console.log(error))
+invokeAction(argv)

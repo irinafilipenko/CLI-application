@@ -1,3 +1,4 @@
+// const contacts = require('./contacts')
 const contacts = require('./contacts')
 
 const { Command } = require('commander')

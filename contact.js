@@ -15,7 +15,7 @@ async function listContacts() {
     const contacts = JSON.parse(data)
     return contacts
   } catch (error) {
-    console.log(error)
+    throw error
   }
 }
 
@@ -25,12 +25,12 @@ async function getContactById(contactId) {
     const contact = contacts.find((item) => item.id.toString() === contactId)
 
     if (!contact) {
-      return null
+      throw new Error('ID incorrect')
     }
 
     return contact
   } catch (error) {
-    console.log(error)
+    throw error
   }
 }
 
@@ -40,14 +40,14 @@ async function removeContact(contactId) {
     const idx = contacts.findIndex((item) => item.id.toString() === contactId)
 
     if (!idx) {
-      return null
+      throw new Error('ID incorrect')
     }
 
     contacts.splice(idx, 1)
     await updateContacts(contacts)
     return 'Success remove'
   } catch (error) {
-    console.log(error)
+    throw error
   }
 }
 
@@ -59,7 +59,7 @@ async function addContact(name, email, phone) {
     await updateContacts(contacts)
     return newContact
   } catch (error) {
-    console.log(error)
+    throw error
   }
 }
 
